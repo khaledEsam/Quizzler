@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     
     let allQuestions = QuestionBank()
     var pickedAnswer : Bool = false
-    
+    var questionNumber : Int = 0
     
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
@@ -25,6 +25,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         let firstQuestion = allQuestions.list[0]
+        
         questionLabel.text = firstQuestion.questionText
         
     }
@@ -32,7 +33,7 @@ class ViewController: UIViewController {
 
     @IBAction func answerPressed(_ sender: AnyObject) {
         
-        if sender.tag == 1 {
+               if sender.tag == 1 {
            
             pickedAnswer = true
         }
@@ -42,6 +43,10 @@ class ViewController: UIViewController {
         }
         
         checkAnswer()
+        
+         questionNumber += 1
+        
+        nextQuestion()
         
     }
     
@@ -53,16 +58,36 @@ class ViewController: UIViewController {
 
     func nextQuestion() {
         
+        if (questionNumber <= 12){
+            
+            questionLabel.text = allQuestions.list[questionNumber].questionText
+
+        }
+        else{
+            
+            let alert = UIAlertController(title: "End of questions", message: "Want to start over?", preferredStyle: .alert)
+            let restartAction = UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                self.startOver()
+            })
+            
+            alert.addAction(restartAction)
+            present(alert, animated: true, completion: nil)
+        
+        }
+        
     }
     
     
     func checkAnswer() {
         
-        let correctAnswer = allQuestions.list[1].answer
+        let correctAnswer = allQuestions.list[questionNumber].answer
         
         if correctAnswer == pickedAnswer{
+            
             print("correct Answer")
+            
         } else {
+            
                 print("Wrong answer")
         }
         
@@ -70,6 +95,10 @@ class ViewController: UIViewController {
     
     
     func startOver() {
+        
+        questionNumber = 0
+        
+        nextQuestion()
        
     }
     
